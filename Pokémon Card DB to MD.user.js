@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         Pokémon Card DB to MD
-// @version      0.1.0
+// @version      0.1.1
 // @description  Adds a button to copy image, set, and number to clipboard as markdown table syntax
 // @namespace    https://github.com/KlingonDragon/user.js
 // @author       KlingonDragon
 // @match        https://www.pokemon.com/uk/pokemon-tcg/pokemon-cards/series/*/*/
 // @run-at       document-end
 // ==/UserScript==
+document.querySelector('title')?.insertAdjacentText('afterbegin', `${window.location.pathname.split('/').slice(5, 7).join(' - ')} | `);
 
 const mdString = `|![${document.querySelector('div.card-description h1')?.textContent}](${document.querySelector('div.card-image > img')?.src})|![${document.querySelector('div.stats-footer h3')?.textContent}](${document.querySelector('div.expansion i')?.style.backgroundImage.replace(/url\("(.*)"\)/, '$1')})|${document.querySelector('div.stats-footer span')?.textContent?.replace(/(\S+)\/(\S+).*/, '$1/$2')}
 `, but = document.createElement('button');
