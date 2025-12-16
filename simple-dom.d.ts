@@ -19,8 +19,8 @@ type SelectorTagName = keyof SelectorTagNameMap;
 //#region Extension Types
 type Extended<D extends DOMNode, C extends CustomProps = {}> = D & C & ExtendMethods;
 interface ExtendMethods {
-    _: (...children: Nested<DOMNode | string | false | undefined | null>) => this;
-    __: (...children: Nested<DOMNode | string | false | undefined | null>) => this;
+    _: (...children: Nested<DOMNode | string | false | undefined | null | Comment>) => this;
+    __: (...children: Nested<DOMNode | string | false | undefined | null | Comment>) => this;
     $: QuerySelector;
     $$: QuerySelectorAll;
     on: (type: string, listener: EventListenerOrEventListenerObject) => this;
@@ -51,7 +51,8 @@ type Delay = (seconds: number) => Promise<void>;
 type WaitSelector = <S extends SelectorTagName, C extends CustomProps = {}>(selectors: S, props?: ExtendProps<SelectorTagNameMap[S], C>, timeOutSeconds?: number) => Promise<Extended<SelectorTagNameMap[S], C>>;
 type NewStyleSheet = (cssText: string, options?: { fromURL?: boolean = false; addToPage?: boolean = true; }) => Promise<CSSStyleSheet>;
 type ObjectUtilityFunction = <Values>(object: Record<string, Values>) => ObjectUtilities<Values>;
-type LockFunction = (name: string) => <T>(callback: (lock: Lock | null) => Promise<T>) => Promise<T>;
+type DictFunction = <Dict extends Record<string, Record<string, string>>, Key extends keyof Dict[keyof Dict]>(dict: Dict) => (key: string) => string;
+type LockFunction = (name: string) => <T>(callback: (LockGrantedCallback<T>)) => Promise<T>;
 //#endregion
 
 //#region Global
@@ -67,6 +68,7 @@ interface SimpleDOM {
     wait$: WaitSelector;
     _css: NewStyleSheet;
     O: ObjectUtilityFunction;
+    dict: DictFunction;
     lock: LockFunction;
 };
 interface Window {
